@@ -31,7 +31,10 @@ module.exports = function(options) {
 	 * @return {void}
 	 */
 	function serve(server, req, callback) {
-		source.getTile(req.z, req.x, req.y, callback);
+		source.getTile(req.z, req.x, req.y, function(err, buffer) {
+			if (err) return callback(err);
+			callback(null, buffer, {'Content-Type': 'application/x-protobuf'});
+		});
 	}
 
 	return {

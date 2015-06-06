@@ -28,7 +28,7 @@
     "lodash": "^2.4.1",
     "sphericalmercator": "1.0.3",
     "mapnik-pool": "0.1.1",
-    "async-cache": "1.0.0",
+    "async-cache": "1.0.0"
   },
   "devDependencies": {
     "chai": "^1.10.0",
