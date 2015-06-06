@@ -3,13 +3,7 @@ var sm = new (require('sphericalmercator'))();
 var MapnikPool = require('mapnik-pool')(mapnik);
 var AsyncCache = require('async-cache');
 
-module.exports = function(options, callback){
-	var backend = new Backend(options);
-	backend.initialize(function(err){
-		callback(err, backend);
-	});
-};
-
+module.exports = Backend;
 
 function Backend(options){
 	var self = this;
@@ -32,7 +26,7 @@ function Backend(options){
 	});
 }
 
-Backend.prototype.initialize = function(callback) {
+Backend.prototype.initialize = function(server, callback) {
 	var self = this;
 	fs.readFile(this.xml, {encoding: 'utf8'}, function(err, data){
 		if(err) return callback(err);
@@ -42,7 +36,7 @@ Backend.prototype.initialize = function(callback) {
 }
 
 Backend.prototype.getTile = function(z, x, y, callback){
-	var meta = this.getMetatileInfo(z, x, y);
+	var meta = this.getVectorTileInfo(z, x, y);
 	tilecache.get(meta.z+","+meta.x+","+meta.y, callback);
 }
 
@@ -55,11 +49,18 @@ Backend.prototype.getTile = function(z, x, y, callback){
  * @param  {int} y
  * @return {Object}
  */
-Backend.prototype.getMetatileInfo = function(z, x, y){
+Backend.prototype.getVectorTileInfo = function(z, x, y){
+	var dz;
+	if(this.metatile === 1) dz = 0;
+	else if(this.metatile === 2) dz = 1;
+	else if(this.metatile === 4) dz = 2;
+	else if(this.metatile === 8) dz = 3;
+	else throw new Error("Unsupported metatile setting: "+this.metatile);
+
 	return {
 		x: Math.floor(x / this.metatile),
 		y: Math.floor(y / this.metatile),
-		z: z >> (this.metatile - 1)
+		z: z - dz
 	};
 }
 
@@ -87,7 +88,7 @@ Backend.prototype.getMetatile = function(z, x, y, callback) {
 			simplify_distance: real_z < self.maxzoom ? 8 : 1, //fgsdfreioywj
 			path_multiplier: 16,
 			buffer_size: self.bufferSize,
-			scale_denominator: 559082.264 / (1 << real_z)
+			scale_denominator: 559082264.028 / (1 << real_z)
 		};
 
 

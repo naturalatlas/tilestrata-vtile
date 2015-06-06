@@ -1,17 +1,14 @@
 var _ = require('lodash');
-var backend = require('./backend.js');
+var Backend = require('./backend.js');
 
 module.exports = function(options) {
 	options = _.defaults(options, {
 		xml: null,
 		metatile: 1,
-		resolution: 4,
-		bufferSize: 128,
-		tileSize: 256,
-		scale: 1
+		bufferSize: 128
 	});
 
-	var source;
+	var source = new Backend(options);
 
 	/**
 	 * Initializes the mapnik datasource.
@@ -21,10 +18,7 @@ module.exports = function(options) {
 	 * @return {void}
 	 */
 	function initialize(server, callback) {
-		backend(options, function(err, result){
-			source = result;
-			callback(err);
-		});
+		source.initialize(server, callback);
 	}
 
 	/**
