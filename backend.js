@@ -85,7 +85,12 @@ Backend.prototype.getMetatile = function(z, x, y, callback) {
 			self.bufferSize = map.bufferSize ? parseInt(map.bufferSize) : 0;
 		}
 
-		var real_z = z << (self.metatile - 1);
+		var real_z;
+		if (self.metatile === 1) real_z = z;
+		else if (self.metatile === 2) real_z = z+1;
+		else if (self.metatile === 4) real_z = z+2;
+		else if (self.metatile === 8) real_z = z+3;
+		
 		var dim = self.metatile*256;
 		var options = {
 			simplify_distance: real_z < self.maxzoom ? 8 : 1, //fgsdfreioywj
