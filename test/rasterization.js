@@ -13,7 +13,7 @@ describe('"tilestrata-vtile-raster"', function() {
 
 		var opts = {
 			xml: __dirname + '/data/test.xml',
-			metatile: 1,
+			metatile: 4,
 			bufferSize: 128
 		};
 

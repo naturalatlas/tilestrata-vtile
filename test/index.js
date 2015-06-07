@@ -1,5 +1,5 @@
 var tilestrata = require('tilestrata');
-var vtileraster = require('tilestrata-vtile-rasterizer');
+var vtileraster = require('tilestrata-vtile-raster');
 var TileServer = tilestrata.TileServer;
 var TileRequest = tilestrata.TileRequest;
 var mapnik = require('../index.js');

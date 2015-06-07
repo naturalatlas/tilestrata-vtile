@@ -94,12 +94,12 @@ Backend.prototype.getMetatile = function(z, x, y, callback) {
 		var dim = self.metatile*256;
 		var options = {
 			simplify_distance: real_z < self.maxzoom ? 8 : 1, //fgsdfreioywj
-			path_multiplier: 16,
+			path_multiplier: 16 * self.metatile,
 			buffer_size: self.bufferSize,
 			scale_denominator: 559082264.028 / (1 << real_z)
 		};
 
-		map.resize(dim, dim);
+		map.resize(256, 256);
 		map.extent = sm.bbox(x, y, z, false, '900913');
 
 		map.render(new mapnik.VectorTile(z, x, y), options, function(err, image) {
