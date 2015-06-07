@@ -10,7 +10,7 @@ describe('Provider Implementation "mapnik"', function() {
 	describe('serve()', function() {
 		it('should render tile', function(done) {
 			var server = new TileServer();
-			var req = TileRequest.parse('/layer/0/0/0/tile.png');
+			var req = TileRequest.parse('/layer/5/5/12/tile.png');
 
 			var provider = mapnik({
 				xml: __dirname + '/data/test.xml',
@@ -34,7 +34,7 @@ describe('Provider Implementation "mapnik"', function() {
 		});
 		it('should render tile w/metatile set', function(done) {
 			var server = new TileServer();
-			var req = TileRequest.parse('/layer/0/0/0/tile.png');
+			var req = TileRequest.parse('/layer/5/5/12/tile.png');
 
 			var provider = mapnik({
 				xml: __dirname + '/data/test.xml',
