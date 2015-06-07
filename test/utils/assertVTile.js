@@ -30,5 +30,10 @@ module.exports = function(z, x, y, expected, actual) {
 	assert.equal(l1.extent,l2.extent);
 	assert.equal(l1.features.length,l2.features.length);
 	assert.deepEqual(l1.features[0],l2.features[0]);
-	assert.deepEqual(v1,v2);
+	try { assert.deepEqual(v1,v2); }
+	catch (e) {
+		console.log('v1 =', JSON.stringify(v1));
+		console.log('v2 =', JSON.stringify(v2));
+		throw e;
+	}
 };
