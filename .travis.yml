@@ -16,7 +16,8 @@ before_install:
   - npm --version
 script:
   # dependencies
-  - npm install --fallback-to-build=false
+  - npm install
   - npm install tilestrata
+  - npm install mapnik --fallback-to-build=false
   # execute tests
   - make test && (make test-ci-coverage || true)
