@@ -5,6 +5,7 @@ var tilestrata = require('tilestrata');
 var TileServer = tilestrata.TileServer;
 var TileRequest = tilestrata.TileRequest;
 var assert = require('chai').assert;
+var assertImage = require('./utils/assertImage.js');
 var fs = require('fs');
 
 describe('"tilestrata-vtile-raster"', function() {
@@ -29,11 +30,7 @@ describe('"tilestrata-vtile-raster"', function() {
 				assert.equal(status, 200);
 				assert.equal(headers['Content-Type'], 'image/png');
 				assert.instanceOf(buffer, Buffer);
-
-				var im_actual = buffer.toString('base64');
-				var im_expected = fs.readFileSync(__dirname + '/fixtures/world.png').toString('base64');
-				assert.equal(im_actual, im_expected);
-
+				assertImage(__dirname + '/fixtures/world.png', buffer);
 				done();
 			});
 		});
