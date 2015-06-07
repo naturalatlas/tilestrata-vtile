@@ -1,18 +1,19 @@
 var tilestrata = require('tilestrata');
 var vtileraster = require('tilestrata-vtile-raster');
+var assertVTile = require('./utils/assertVTile.js');
 var TileServer = tilestrata.TileServer;
 var TileRequest = tilestrata.TileRequest;
-var mapnik = require('../index.js');
+var vtile = require('../index.js');
 var assert = require('chai').assert;
 var fs = require('fs');
 
-describe('Provider Implementation "mapnik"', function() {
+describe('Provider Implementation "vtile"', function() {
 	describe('serve()', function() {
 		it('should render tile', function(done) {
 			var server = new TileServer();
 			var req = TileRequest.parse('/layer/5/5/12/tile.png');
 
-			var provider = mapnik({
+			var provider = vtile({
 				xml: __dirname + '/data/test.xml',
 				metatile: 1,
 				bufferSize: 128
@@ -23,11 +24,7 @@ describe('Provider Implementation "mapnik"', function() {
 					assert.isFalse(!!err, err);
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
-
-					var im_actual = buffer.toString('base64');
-					var im_expected = fs.readFileSync(__dirname + '/fixtures/world.pbf').toString('base64');
-					assert.equal(im_actual, im_expected);
-
+					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world.pbf');
 					done();
 				});
 			});
@@ -36,7 +33,7 @@ describe('Provider Implementation "mapnik"', function() {
 			var server = new TileServer();
 			var req = TileRequest.parse('/layer/5/5/12/tile.png');
 
-			var provider = mapnik({
+			var provider = vtile({
 				xml: __dirname + '/data/test.xml',
 				metatile: 4,
 				bufferSize: 128
@@ -47,11 +44,7 @@ describe('Provider Implementation "mapnik"', function() {
 					assert.isFalse(!!err, err);
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
-
-					var im_actual = buffer.toString('base64');
-					var im_expected = fs.readFileSync(__dirname + '/fixtures/world_metatile.pbf').toString('base64');
-					assert.equal(im_actual, im_expected);
-
+					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world_metatile.pbf');
 					done();
 				});
 			});
