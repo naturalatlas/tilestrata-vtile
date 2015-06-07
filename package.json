@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "chai": "^1.10.0",
+    "json-diff": "^0.3.1",
     "mocha": "^2.0.1",
     "tilestrata-vtile-raster": "*"
   },

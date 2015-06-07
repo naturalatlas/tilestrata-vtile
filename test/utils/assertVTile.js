@@ -1,5 +1,6 @@
 var fs = require('fs');
 var mapnik = require('mapnik');
+var jdiff = require('json-diff');
 var assert = require('chai').assert;
 
 function vtile(z, x, y, data) {
@@ -32,8 +33,7 @@ module.exports = function(z, x, y, expected, actual) {
 	assert.deepEqual(l1.features[0],l2.features[0]);
 	try { assert.deepEqual(v1,v2); }
 	catch (e) {
-		console.log('v1 =', JSON.stringify(v1));
-		console.log('v2 =', JSON.stringify(v2));
+		console.log(jdiff.diffString(v1,v2));
 		throw e;
 	}
 };
