@@ -1,6 +1,6 @@
 {
   "name": "tilestrata-vtile",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A TileStrata plugin for generating vector tiles with mapnik",
   "author": "Brandon Reavis <brandon@naturalatlas.com>",
   "license": "Apache License, v2.0",
@@ -38,6 +38,6 @@
   },
   "peerDependencies": {
     "tilestrata": "*",
-    "mapnik": ">=1.4.9"
+    "mapnik": "*"
   }
 }
