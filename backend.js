@@ -15,8 +15,8 @@ function Backend(options) {
 	this.bufferSize = options.bufferSize;
 	this.maxzoom = options.maxzoom;
 
-	if ((this.metatile & (this.metatile - 1)) !== 0) {
-		throw new Error("Metatile must be a power of 2");
+	if ([1,2,4,8].indexOf(this.metatile) === -1) {
+		throw new Error("Metatile option must be 1, 2, 4, or 8");
 	}
 
 	this.tilecache = new AsyncCache({
@@ -105,6 +105,12 @@ Backend.prototype.getMetatile = function(z, x, y, callback) {
 		map.render(new mapnik.VectorTile(z, x, y), options, function(err, image) {
 			self.pool.release(map);
 			if (err) return callback(err);
+
+			if(image.empty()){
+				err = new Error("No data");
+				err.statusCode = 204;
+				return callback(err);
+			}
 
 			var buffer = image.getData();
 			buffer.metatile = self.metatile;

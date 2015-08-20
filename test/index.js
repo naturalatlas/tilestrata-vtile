@@ -49,5 +49,24 @@ describe('Provider Implementation "vtile"', function() {
 				});
 			});
 		});
+		it('should send 204 error when tile is empty', function(done) {
+			var server = new TileServer();
+			var req = TileRequest.parse('/layer/12/2000/2000/tile.png');
+
+			var provider = vtile({
+				xml: __dirname + '/data/test.xml',
+				metatile: 1,
+				bufferSize: 0
+			});
+			provider.init(server, function(err) {
+				assert.isFalse(!!err, err);
+				provider.serve(server, req, function(err, buffer, headers) {
+					assert.instanceOf(err, Error);
+					assert.equal(err.statusCode, 204);
+					assert.equal(err.message, 'No data');
+					done();
+				});
+			});
+		});
 	});
 });
