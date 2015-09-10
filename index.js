@@ -1,12 +1,16 @@
 var _ = require('lodash');
 var Backend = require('./backend.js');
 
-module.exports = function(options) {
-	options = _.defaults(options, {
+module.exports = function() {
+	var options = {
 		xml: null,
 		metatile: 1,
 		bufferSize: 128
-	});
+	};
+
+	for (var i = 0, n = arguments.length; i < n; i++) {
+		_.extend(options, arguments[i]);
+	}
 
 	var source = new Backend(options);
 

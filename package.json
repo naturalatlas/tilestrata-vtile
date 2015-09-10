@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/naturalatlas/tilestrata-vtile",
   "dependencies": {
+    "active-cache": "^0.1.0",
     "lodash": "^2.4.1",
-    "sphericalmercator": "1.0.3",
     "mapnik-pool": "0.1.1",
-    "async-cache": "1.0.0"
+    "sphericalmercator": "1.0.3"
   },
   "devDependencies": {
     "chai": "^1.10.0",
