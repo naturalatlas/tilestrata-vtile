@@ -5,7 +5,10 @@ module.exports = function() {
 	var options = {
 		xml: null,
 		metatile: 1,
-		bufferSize: 128
+		bufferSize: 128,
+		compression: 'gzip',
+		compressionLevel: null,
+		compressionStrategy: null
 	};
 
 	for (var i = 0, n = arguments.length; i < n; i++) {

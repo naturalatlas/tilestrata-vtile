@@ -14,6 +14,11 @@ function Backend(options) {
 	this.metatile = options.metatile || 1;
 	this.bufferSize = options.bufferSize;
 	this.maxzoom = options.maxzoom;
+	this.dataopts = {};
+
+	if (options.compression) this.dataopts.compression = options.compression;
+	if (options.compressionLevel) this.dataopts.level = options.compressionLevel;
+	if (options.compressionStrategy) this.dataopts.strategy = options.compressionStrategy;
 
 	if ([1,2,4,8].indexOf(this.metatile) === -1) {
 		throw new Error("Metatile option must be 1, 2, 4, or 8");
@@ -116,13 +121,13 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 			self.pool.release(map);
 			if (err) return callback(err);
 
-			if(image.empty()){
+			if (image.empty()) {
 				err = new Error("No data");
 				err.statusCode = 204;
 				return callback(err);
 			}
 
-			var buffer = image.getData();
+			var buffer = image.getData(self.dataopts);
 			buffer.metatile = self.metatile;
 
 			image.clear(function(err) {
