@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - "0.10"
   - "0.12"
+  - "4.0"
 sudo: false
 before_install:
   # install c++11 capable libstdc++ without sudo
@@ -11,4 +12,4 @@ install:
   - npm install tilestrata
   - npm install mapnik --fallback-to-build=false
 script:
-  - make test && (make test-ci-coverage || true)
+  - npm run test-ci && (make test-ci-coverage || true)

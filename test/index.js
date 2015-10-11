@@ -19,11 +19,12 @@ describe('Provider Implementation "vtile"', function() {
 				bufferSize: 128
 			});
 			provider.init(server, function(err) {
-				assert.isFalse(!!err, err);
+				if (err) throw err;
 				provider.serve(server, req, function(err, buffer, headers) {
-					assert.isFalse(!!err, err);
+					if (err) throw err;
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
+					// fs.writeFileSync(__dirname + '/fixtures/world.pbf', buffer);
 					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world.pbf');
 					done();
 				});
@@ -39,11 +40,12 @@ describe('Provider Implementation "vtile"', function() {
 				bufferSize: 128
 			});
 			provider.init(server, function(err) {
-				assert.isFalse(!!err, err);
+				if (err) throw err;
 				provider.serve(server, req, function(err, buffer, headers) {
-					assert.isFalse(!!err, err);
+					if (err) throw err;
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
+					// fs.writeFileSync(__dirname + '/fixtures/world_metatile.pbf', buffer);
 					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world_metatile.pbf');
 					done();
 				});
@@ -59,7 +61,7 @@ describe('Provider Implementation "vtile"', function() {
 				bufferSize: 0
 			});
 			provider.init(server, function(err) {
-				assert.isFalse(!!err, err);
+				if (err) throw err;
 				provider.serve(server, req, function(err, buffer, headers) {
 					assert.instanceOf(err, Error);
 					assert.equal(err.statusCode, 204);
