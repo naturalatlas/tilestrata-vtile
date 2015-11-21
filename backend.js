@@ -129,6 +129,10 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 			var buffer = image.getData(self.dataopts);
 			buffer.metatile = self.metatile;
 			buffer._vtile = image;
+			buffer._vx = x;
+			buffer._vy = y;
+			buffer._vz = z;
+
 			callback(null, buffer);
 		});
 	});

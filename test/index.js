@@ -25,9 +25,14 @@ describe('Provider Implementation "vtile"', function() {
 						'Content-Type': 'application/x-protobuf',
 						'Content-Encoding': 'gzip'
 					});
+
 					assert.instanceOf(buffer, Buffer);
 					assert.instanceOf(buffer._vtile, mapnik.VectorTile, 'buffer._vtile');
+					assert.equal(buffer._vx, 5, 'buffer._vx');
+					assert.equal(buffer._vy, 12, 'buffer._vy');
+					assert.equal(buffer._vz, 5, 'buffer._vz');
 					assert.equal(buffer.metatile, 1, 'buffer.metatile');
+
 					// fs.writeFileSync(__dirname + '/fixtures/world.pbf', buffer);
 					assertVTile(5, 5, 12, buffer, __dirname + '/fixtures/world.pbf');
 					done();
