@@ -1,3 +1,4 @@
+/* eslint new-cap: 0 */
 var mapnik = require('mapnik');
 var assert = require('chai').assert;
 

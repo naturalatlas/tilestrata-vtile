@@ -3,11 +3,12 @@
   "version": "0.4.1",
   "description": "A TileStrata plugin for generating vector tiles with mapnik",
   "author": "Brandon Reavis <brandon@naturalatlas.com>",
-  "license": "Apache License, v2.0",
+  "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R list",
-    "test-ci": "mocha -R tap"
+    "test": "eslint . --fix && mocha -R list",
+    "test-ci": "mocha -R tap",
+    "test-syntax": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -33,7 +34,8 @@
   },
   "devDependencies": {
     "chai": "^3.3.0",
-    "json-diff": "^0.3.1",
+    "eslint": "^1.10.1",
+    "eslint-config-naturalatlas": "latest",
     "mocha": "^2.3.3",
     "tilestrata-vtile-raster": "*"
   },

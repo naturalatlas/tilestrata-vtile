@@ -1,11 +1,9 @@
 var tilestrata = require('tilestrata');
-var vtileraster = require('tilestrata-vtile-raster');
 var assertVTile = require('./utils/assertVTile.js');
 var TileServer = tilestrata.TileServer;
 var TileRequest = tilestrata.TileRequest;
 var vtile = require('../index.js');
 var assert = require('chai').assert;
-var fs = require('fs');
 
 describe('Provider Implementation "vtile"', function() {
 	describe('serve()', function() {
@@ -25,7 +23,7 @@ describe('Provider Implementation "vtile"', function() {
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
 					// fs.writeFileSync(__dirname + '/fixtures/world.pbf', buffer);
-					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world.pbf');
+					assertVTile(5, 5, 12, buffer, __dirname + '/fixtures/world.pbf');
 					done();
 				});
 			});
@@ -46,7 +44,7 @@ describe('Provider Implementation "vtile"', function() {
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
 					// fs.writeFileSync(__dirname + '/fixtures/world_metatile.pbf', buffer);
-					assertVTile(5,5,12,buffer,__dirname + '/fixtures/world_metatile.pbf');
+					assertVTile(5, 5, 12, buffer, __dirname + '/fixtures/world_metatile.pbf');
 					done();
 				});
 			});
@@ -62,7 +60,7 @@ describe('Provider Implementation "vtile"', function() {
 			});
 			provider.init(server, function(err) {
 				if (err) throw err;
-				provider.serve(server, req, function(err, buffer, headers) {
+				provider.serve(server, req, function(err) {
 					assert.instanceOf(err, Error);
 					assert.equal(err.statusCode, 204);
 					assert.equal(err.message, 'No data');

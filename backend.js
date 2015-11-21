@@ -5,8 +5,6 @@ var sm = new (require('sphericalmercator'))();
 var MapnikPool = require('mapnik-pool')(mapnik);
 var AsyncCache = require('active-cache/async');
 
-module.exports = Backend;
-
 function Backend(options) {
 	var self = this;
 	this.pool = null;
@@ -20,8 +18,8 @@ function Backend(options) {
 	if (options.compressionLevel) this.dataopts.level = options.compressionLevel;
 	if (options.compressionStrategy) this.dataopts.strategy = options.compressionStrategy;
 
-	if ([1,2,4,8].indexOf(this.metatile) === -1) {
-		throw new Error("Metatile option must be 1, 2, 4, or 8");
+	if ([1, 2, 4, 8].indexOf(this.metatile) === -1) {
+		throw new Error('Metatile option must be 1, 2, 4, or 8');
 	}
 
 	// if metatile > 1, a vector metatile is used for multiple
@@ -30,7 +28,7 @@ function Backend(options) {
 	if (this.metatile > 1) {
 		this.tilecache = new AsyncCache({
 			max: options.cacheMax || 16,
-			maxAge: options.cacheMaxAge || 1000*20,
+			maxAge: options.cacheMaxAge || 1000 * 20,
 			interval: options.cacheClearInterval || 5000,
 			load: function(key, callback) {
 				var coord = key.split(',');
@@ -58,7 +56,7 @@ Backend.prototype.initialize = function(server, callback) {
 Backend.prototype.getTile = function(z, x, y, callback) {
 	var meta = this.getVectorTileInfo(z, x, y);
 	if (this.tilecache) {
-		this.tilecache.get(meta.z+','+meta.x+','+meta.y, callback);
+		this.tilecache.get(meta.z + ',' + meta.x + ',' + meta.y, callback);
 	} else {
 		this.buildVectorTile(meta.z, meta.x, meta.y, callback);
 	}
@@ -79,7 +77,7 @@ Backend.prototype.getVectorTileInfo = function(z, x, y) {
 	else if (this.metatile === 2) dz = 1;
 	else if (this.metatile === 4) dz = 2;
 	else if (this.metatile === 8) dz = 3;
-	else throw new Error("Unsupported metatile setting: "+this.metatile);
+	else throw new Error('Unsupported metatile setting: ' + this.metatile);
 
 	return {
 		x: Math.floor(x / this.metatile),
@@ -91,22 +89,22 @@ Backend.prototype.getVectorTileInfo = function(z, x, y) {
 Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 	var self = this;
 
-    this.pool.acquire(function(err, map) {
-    	if (err) return callback(err);
+	this.pool.acquire(function(err, map) {
+		if (err) return callback(err);
 
 		if (self.maxzoom === undefined) {
-			self.maxzoom = map.parameters.maxzoom ? parseInt(map.parameters.maxzoom) : 14;
-		} else if (self.bufferSize === undefined) {
-			self.bufferSize = map.bufferSize ? parseInt(map.bufferSize) : 0;
+			self.maxzoom = map.parameters.maxzoom ? parseInt(map.parameters.maxzoom, 10) : 14;
+		}
+		if (self.bufferSize === undefined) {
+			self.bufferSize = map.bufferSize ? parseInt(map.bufferSize, 10) : 0;
 		}
 
 		var real_z;
 		if (self.metatile === 1) real_z = z;
-		else if (self.metatile === 2) real_z = z+1;
-		else if (self.metatile === 4) real_z = z+2;
-		else if (self.metatile === 8) real_z = z+3;
+		else if (self.metatile === 2) real_z = z + 1;
+		else if (self.metatile === 4) real_z = z + 2;
+		else if (self.metatile === 8) real_z = z + 3;
 
-		var dim = self.metatile*256;
 		var options = {
 			simplify_distance: real_z < self.maxzoom ? 8 : 1,
 			path_multiplier: 16 * self.metatile,
@@ -122,7 +120,7 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 			if (err) return callback(err);
 
 			if (image.empty()) {
-				err = new Error("No data");
+				err = new Error('No data');
 				err.statusCode = 204;
 				return callback(err);
 			}
@@ -136,3 +134,5 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 		});
 	});
 };
+
+module.exports = Backend;
