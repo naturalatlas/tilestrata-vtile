@@ -23,7 +23,7 @@ describe('"tilestrata-vtile-raster"', function() {
 		}));
 
 		server.initialize(function(err) {
-			assert.isFalse(!!err, err);
+			if (err) throw err;
 			server.serve(req, false, function(status, buffer, headers) {
 				assert.equal(status, 200);
 				assert.equal(headers['Content-Type'], 'image/png');

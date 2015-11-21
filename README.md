@@ -29,6 +29,22 @@ server.layer('mylayer')
     }));
 ```
 
+If you need fine control over the Mapnik vector tile creation options, use the `overrideRenderOptions` option:
+
+```js
+server.layer('mylayer')
+    .route('t.pbf').use(vtile({
+        xml: '/path/to/map.xml',
+        tileSize: 256,
+        metatile: 1,
+        bufferSize: 128,
+        overrideRenderOptions: function(opts, z, maxz) {
+            opts.simplify_distance = z < maxz ? 8 : 1;
+            return opts;
+        }
+    }))
+```
+
 ## Contributing
 
 Before submitting pull requests, please update the [tests](test) and make sure they all pass.

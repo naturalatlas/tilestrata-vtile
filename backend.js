@@ -13,6 +13,7 @@ function Backend(options) {
 	this.bufferSize = options.bufferSize;
 	this.maxzoom = options.maxzoom;
 	this.dataopts = {};
+	this.overrideRenderOptions = options.overrideRenderOptions;
 
 	if (options.compression) this.dataopts.compression = options.compression;
 	if (options.compressionLevel) this.dataopts.level = options.compressionLevel;
@@ -105,12 +106,12 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 		else if (self.metatile === 4) real_z = z + 2;
 		else if (self.metatile === 8) real_z = z + 3;
 
-		var options = {
+		var options = self.overrideRenderOptions({
 			simplify_distance: real_z < self.maxzoom ? 8 : 1,
 			path_multiplier: 16 * self.metatile,
 			buffer_size: self.bufferSize,
 			scale_denominator: 559082264.028 / (1 << real_z)
-		};
+		}, real_z, self.maxzoom);
 
 		map.resize(256, 256);
 		map.extent = sm.bbox(x, y, z, false, '900913');

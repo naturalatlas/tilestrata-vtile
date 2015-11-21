@@ -8,7 +8,10 @@ module.exports = function() {
 		bufferSize: 128,
 		compression: 'gzip',
 		compressionLevel: null,
-		compressionStrategy: null
+		compressionStrategy: null,
+		overrideRenderOptions: function(opts) {
+			return opts;
+		}
 	};
 
 	for (var i = 0, n = arguments.length; i < n; i++) {

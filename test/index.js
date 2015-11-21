@@ -69,4 +69,30 @@ describe('Provider Implementation "vtile"', function() {
 			});
 		});
 	});
+
+	it('should acknowledge "overrideRenderOptions" option', function(done) {
+		var server = new TileServer();
+		var req = TileRequest.parse('/layer/12/2000/2000/tile.pbf');
+		var calledOverrides = false;
+
+		var provider = vtile({
+			xml: __dirname + '/data/test.xml',
+			metatile: 1,
+			bufferSize: 0,
+			overrideRenderOptions: function(opts, z, maxz) {
+				assert.equal(z, 12, 'z');
+				assert.equal(maxz, 14, 'maxz');
+				assert.isObject(opts);
+				calledOverrides = true;
+				return opts;
+			}
+		});
+		provider.init(server, function(err) {
+			if (err) throw err;
+			provider.serve(server, req, function() {
+				assert.isTrue(calledOverrides, 'Called overrideRenderOptions option');
+				done();
+			});
+		});
+	});
 });
