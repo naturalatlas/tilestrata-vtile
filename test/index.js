@@ -1,3 +1,4 @@
+var mapnik = require('mapnik');
 var tilestrata = require('tilestrata');
 var assertVTile = require('./utils/assertVTile.js');
 var TileServer = tilestrata.TileServer;
@@ -22,6 +23,8 @@ describe('Provider Implementation "vtile"', function() {
 					if (err) throw err;
 					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
 					assert.instanceOf(buffer, Buffer);
+					assert.instanceOf(buffer._vtile, mapnik.VectorTile, 'buffer._vtile');
+					assert.equal(buffer.metatile, 1, 'buffer.metatile');
 					// fs.writeFileSync(__dirname + '/fixtures/world.pbf', buffer);
 					assertVTile(5, 5, 12, buffer, __dirname + '/fixtures/world.pbf');
 					done();
