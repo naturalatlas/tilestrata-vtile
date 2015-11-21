@@ -43,7 +43,11 @@ module.exports = function() {
 	function serve(server, req, callback) {
 		source.getTile(req.z, req.x, req.y, function(err, buffer) {
 			if (err) return callback(err);
-			callback(null, buffer, {'Content-Type': 'application/x-protobuf'});
+			var headers = {'Content-Type': 'application/x-protobuf'};
+			if (options.compression === 'gzip') {
+				headers['Content-Encoding'] = 'gzip';
+			}
+			callback(null, buffer, headers);
 		});
 	}
 

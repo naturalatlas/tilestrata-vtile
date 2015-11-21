@@ -21,7 +21,10 @@ describe('Provider Implementation "vtile"', function() {
 				if (err) throw err;
 				provider.serve(server, req, function(err, buffer, headers) {
 					if (err) throw err;
-					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
+					assert.deepEqual(headers, {
+						'Content-Type': 'application/x-protobuf',
+						'Content-Encoding': 'gzip'
+					});
 					assert.instanceOf(buffer, Buffer);
 					assert.instanceOf(buffer._vtile, mapnik.VectorTile, 'buffer._vtile');
 					assert.equal(buffer.metatile, 1, 'buffer.metatile');
@@ -44,7 +47,10 @@ describe('Provider Implementation "vtile"', function() {
 				if (err) throw err;
 				provider.serve(server, req, function(err, buffer, headers) {
 					if (err) throw err;
-					assert.deepEqual(headers, {'Content-Type': 'application/x-protobuf'});
+					assert.deepEqual(headers, {
+						'Content-Type': 'application/x-protobuf',
+						'Content-Encoding': 'gzip'
+					});
 					assert.instanceOf(buffer, Buffer);
 					// fs.writeFileSync(__dirname + '/fixtures/world_metatile.pbf', buffer);
 					assertVTile(5, 5, 12, buffer, __dirname + '/fixtures/world_metatile.pbf');
