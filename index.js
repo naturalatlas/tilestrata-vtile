@@ -1,4 +1,4 @@
-var _ = require('lodash');
+var extend = require('lodash/extend');
 var Backend = require('./backend.js');
 
 module.exports = function() {
@@ -15,7 +15,7 @@ module.exports = function() {
 	};
 
 	for (var i = 0, n = arguments.length; i < n; i++) {
-		_.extend(options, arguments[i]);
+		extend(options, arguments[i]);
 	}
 
 	var source = new Backend(options);

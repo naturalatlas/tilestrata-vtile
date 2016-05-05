@@ -1,3 +1,4 @@
 {
-	"extends": "naturalatlas/base"
+	"extends": "naturalatlas/base",
+	"rules": {"no-shadow": 0}
 }

@@ -1,15 +1,26 @@
-language: node_js
-node_js:
-  - "0.10"
-  - "0.12"
-  - "4.0"
+language: cpp
+compiler:
+  - gcc
+env:
+  matrix:
+    - NODE_NVM_VERSION="4" NODE_MAPNIK_VERSION="latest"
+    - NODE_NVM_VERSION="4" NODE_MAPNIK_VERSION="3.5"
+    - NODE_NVM_VERSION="4" NODE_MAPNIK_VERSION="3.4"
+    - NODE_NVM_VERSION="0.10" NODE_MAPNIK_VERSION="3.4"
 sudo: false
 before_install:
   # install c++11 capable libstdc++ without sudo
   - if [[ $(uname -s) == 'Linux' ]]; then wget https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test/+files/libstdc%2B%2B6_4.8.1-2ubuntu1~12.04_amd64.deb && dpkg -x libstdc++6_4.8.1-2ubuntu1~12.04_amd64.deb ./ && export LD_PRELOAD=$(pwd)/usr/lib/x86_64-linux-gnu/libstdc++.so.6; fi
+  # install correct node version
+  - git clone https://github.com/creationix/nvm.git ../.nvm && source ../.nvm/nvm.sh
+  - nvm install $NODE_NVM_VERSION
+  - nvm use $NODE_NVM_VERSION
+  - node --version
+  - npm --version
 install:
   - npm install --fallback-to-build=false
   - npm install tilestrata
-  - npm install mapnik --fallback-to-build=false
+  - npm install mapnik@$NODE_MAPNIK_VERSION --fallback-to-build=false
+  - node -e "console.log(require('mapnik').version)"
 script:
-  - npm run test-ci && (make test-ci-coverage || true)
+  - make test && (make test-ci-coverage || true)

@@ -5,8 +5,12 @@ var assert = require('chai').assert;
 function vtileInstance(z, x, y, data) {
 	if (typeof data === 'string') data = fs.readFileSync(data);
 	var vtile = new mapnik.VectorTile(z, x, y);
-	vtile.setData(data);
-	vtile.parse();
+	if (vtile.setDataSync) {
+		vtile.setDataSync(data);
+	} else {
+		vtile.setData(data);
+	}
+	if (vtile.parse) vtile.parse();
 	return vtile;
 }
 
@@ -14,22 +18,26 @@ module.exports = function(z, x, y, expected, actual) {
 	var vtile1 = vtileInstance(z, x, y, expected);
 	var vtile2 = vtileInstance(z, x, y, actual);
 
-	assert.equal(vtile1.width(), vtile2.width());
-	assert.equal(vtile1.height(), vtile2.height());
-	assert.deepEqual(vtile1.names(), vtile2.names());
-	assert.deepEqual(vtile1.names(), vtile2.names());
-	assert.equal(vtile1.isSolid(), vtile2.isSolid());
-	assert.equal(vtile1.empty(), vtile2.empty());
+	// removed in node-mapnik 3.5.0
+	if (vtile1.width) {
+		assert.equal(vtile1.width(), vtile2.width());
+		assert.equal(vtile1.height(), vtile2.height());
+	}
+	if (vtile1.isSolid) {
+		assert.equal(vtile1.isSolid(), vtile2.isSolid());
+	}
+
+	assert.deepEqual(vtile1.names(), vtile2.names(), 'names');
+	assert.equal(vtile1.empty(), vtile2.empty(), 'empty');
 	var v1 = vtile1.toJSON();
 	var v2 = vtile2.toJSON();
-	assert.equal(v1.length, v2.length);
+	assert.equal(v1.length, v2.length, 'length');
 	var l1 = v1[0];
 	var l2 = v2[0];
-	assert.equal(l1.name, l2.name);
-	assert.equal(l1.version, l2.version);
-	assert.equal(l1.extent, l2.extent);
-	assert.equal(l1.features.length, l2.features.length);
-	assert.deepEqual(l1.features[0], l2.features[0]);
+	assert.equal(l1.name, l2.name, 'layer[0].name');
+	assert.equal(l1.extent, l2.extent, 'layer[0].extent');
+	assert.equal(l1.features.length, l2.features.length, 'layer[0].features.length');
+	assert.deepEqual(l1.features[0], l2.features[0], 'layer[0].features[0]');
 
 	// disable strict equality check for now
 	// https://github.com/mapnik/node-mapnik/issues/442

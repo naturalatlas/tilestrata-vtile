@@ -5,6 +5,9 @@ var sm = new (require('sphericalmercator'))();
 var MapnikPool = require('mapnik-pool')(mapnik);
 var AsyncCache = require('active-cache/async');
 
+var versionParts = mapnik.version.split('.');
+var NODE_MAPNIK_MAJORMINOR = Number(versionParts[0] + '.' + Number(versionParts[1]));
+
 function Backend(options) {
 	var self = this;
 	this.pool = null;
@@ -106,17 +109,31 @@ Backend.prototype.buildVectorTile = function(z, x, y, callback) {
 		else if (self.metatile === 4) real_z = z + 2;
 		else if (self.metatile === 8) real_z = z + 3;
 
-		var options = self.overrideRenderOptions({
+		var prelimRenderOptions = {
 			simplify_distance: real_z < self.maxzoom ? 8 : 1,
-			path_multiplier: 16 * self.metatile,
 			buffer_size: self.bufferSize,
 			scale_denominator: 559082264.028 / (1 << real_z)
-		}, real_z, self.maxzoom);
+		};
+
+		if (NODE_MAPNIK_MAJORMINOR < 3.5) {
+			prelimRenderOptions.path_multiplier = 16 * self.metatile;
+		}
+		var renderOptions = self.overrideRenderOptions(prelimRenderOptions, real_z, self.maxzoom);
+
+		var vtile;
+		if (NODE_MAPNIK_MAJORMINOR < 3.5) {
+			vtile = new mapnik.VectorTile(z, x, y);
+		} else {
+			// @see https://github.com/mapbox/tilelive-bridge/pull/76
+			// The buffer size is in vector tile coordinates, while the buffer size on the
+			// map object is in image coordinates. Therefore, lets multiply the buffer_size
+			// by the old "path_multiplier" value of 16 to get a proper buffer size.
+			vtile = new mapnik.VectorTile(z, x, y, {buffer_size: self.bufferSize * 16});
+		}
 
 		map.resize(256, 256);
 		map.extent = sm.bbox(x, y, z, false, '900913');
-
-		map.render(new mapnik.VectorTile(z, x, y), options, function(err, image) {
+		map.render(vtile, renderOptions, function(err, image) {
 			self.pool.release(map);
 			if (err) return callback(err);
 

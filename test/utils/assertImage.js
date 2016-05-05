@@ -8,5 +8,6 @@ function im(image) {
 }
 
 module.exports = function(expected, actual) {
-	assert.equal(0, im(expected).compare(im(actual)), 'Images should be equal');
+	var difference = im(expected).compare(im(actual));
+	assert(difference <= 40, 'Images should be roughly equal');
 };

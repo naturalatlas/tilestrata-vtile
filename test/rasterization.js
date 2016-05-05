@@ -28,6 +28,8 @@ describe('"tilestrata-vtile-raster"', function() {
 				assert.equal(status, 200);
 				assert.equal(headers['Content-Type'], 'image/png');
 				assert.instanceOf(buffer, Buffer);
+				// var fs = require('fs');
+				// fs.writeFileSync(__dirname + '/fixtures/world_new.png', buffer);
 				assertImage(__dirname + '/fixtures/world.png', buffer);
 				done();
 			});
